@@ -1,6 +1,9 @@
 extends layout
 block content
-    h1  #{title}
-    ul
-        each article, i in articles
-            li= article.title
+    .container
+        .row
+            .col-md-6.offset-md-3
+                h1  Home Page
+                ul.list-group
+                    each article, i in articles
+                        li.list-group-item= article.title

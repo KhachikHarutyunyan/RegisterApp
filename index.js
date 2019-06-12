@@ -2,97 +2,99 @@ const express = require('express');
 const path = require('path');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
-const session = require('express-session');
 const expressValidator = require('express-validator');
 const flash = require('connect-flash');
-const config = require('./config/database');
+const session = require('express-session');
 const passport = require('passport');
+const config = require('./config/database');
 
-
-mongoose.connect(config.database, {useNewUrlParser: true});
+mongoose.connect(config.database, {useNewUrlParser:true});
 let db = mongoose.connection;
 
-// check connection
-db.once('open', () => {
-    console.log('Connected to DB');
+// Check connection
+db.once('open', function(){
+  console.log('Connected to MongoDB');
 });
 
-// check for DB errors
-db.on('error', (err) => {
-    console.log(err);
+// Check for DB errors
+db.on('error', function(err){
+  console.log(err);
 });
 
-// init app
+// Init App
 const app = express();
 
-// bring in models
+// Bring in Models
 let Article = require('./models/article');
 
-// load views Engine
+// Load View Engine
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
 
-// Body Parser Middlware
+// Body Parser Middleware
+// parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }));
+// parse application/json
 app.use(bodyParser.json());
 
-// Public folder
+// Set Public Folder
 app.use(express.static(path.join(__dirname, 'public')));
-// express-session middlware
+
+// Express Session Middleware
 app.use(session({
-    secret: 'keyboard cat',
-    resave: true,
-    saveUninitialized: true
+  secret: 'keyboard cat',
+  resave: true,
+  saveUninitialized: true
 }));
-// Express messages Middlware
+
+// Express Messages Middleware
 app.use(require('connect-flash')());
-app.use((req, res, next) => {
-    res.locals.messages = require('express-messages')(req, res);
-    next();
+app.use(function (req, res, next) {
+  res.locals.messages = require('express-messages')(req, res);
+  next();
 });
 
-// express Validator middlware
+// Express Validator Middleware
 app.use(expressValidator({
-    errorFormatter: (param, msg, value) => {
-        let namespace = param.split('.'),
-        root = namespace.shift(),
-        formParam = root;
+  errorFormatter: function(param, msg, value) {
+      var namespace = param.split('.')
+      , root    = namespace.shift()
+      , formParam = root;
 
-        while (namespace.length) {
-            formParam += '[' + namespace.shift() + ']';
-        }
-        return {
-            param: formParam,
-            msg: msg,
-            value: value
-        };
+    while(namespace.length) {
+      formParam += '[' + namespace.shift() + ']';
     }
+    return {
+      param : formParam,
+      msg   : msg,
+      value : value
+    };
+  }
 }));
 
 // Passport Config
 require('./config/passport')(passport);
-// passport Middlware
+// Passport Middleware
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.get('*', (req, res, next) => {
-    res.locals.user = req.user || null;
-    next();
+app.get('*', function(req, res, next){
+  res.locals.user = req.user || null;
+  next();
 });
 
-app.get('/', (req, res) => {
-    Article.find({}, (err, articles) => {
-        if (err) {
-            console.log(err);
-        } else {
-            res.render('index', {
-                title: 'From title',
-                articles: articles
-            });
-        }
-        
-    });
-    
+// Home Route
+app.get('/', function(req, res){
+  Article.find({}, function(err, articles){
+    if(err){
+      console.log(err);
+    } else {
+      res.render('index', {
+        title:'Articles',
+        articles: articles
+      });
+    }
+  });
 });
 
 // Route Files
@@ -101,7 +103,7 @@ let users = require('./routes/users');
 app.use('/articles', articles);
 app.use('/users', users);
 
-
-app.listen('3000', () => {
-    console.log("Server is running 3000 port");
-})
+// Start Server
+app.listen(3000, function(){
+  console.log('Server started on port 3000...');
+});

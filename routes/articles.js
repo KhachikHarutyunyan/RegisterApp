@@ -2,6 +2,8 @@ const express = require('express');
 const router = express.Router();
 
 let Article = require('../models/article');
+// user model
+let User = require('../models/users')
 
 router.get('/add', ensureAuthenticated, (req, res) => {
     res.render('add_article', {
@@ -12,7 +14,7 @@ router.get('/add', ensureAuthenticated, (req, res) => {
 // add submit Post
 router.post('/add', (req, res) => {
     req.checkBody('title', 'Title is required').notEmpty();
-    req.checkBody('author', 'Author is required').notEmpty();
+    // req.checkBody('author', 'Author is required').notEmpty();
     req.checkBody('body', 'Body is required').notEmpty();
 
     // get errors
@@ -26,7 +28,7 @@ router.post('/add', (req, res) => {
     } else {
         let article = new Article();
         article.title = req.body.title;
-        article.author = req.body.author;
+        article.author = req.user._id;
         article.body = req.body.body;
         article.save((err) => {
             if (err) {
