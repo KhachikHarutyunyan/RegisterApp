@@ -1,0 +1,17 @@
+extends layout
+block content
+    .container
+        .row
+            .col-md-8
+        h1 Hello World #{title}
+        form(action="/articles/add", method="POST")
+            #form-group
+                label Title:
+                input.form-control(type="text", name='title')
+            #form-group
+                label Author:
+                input.form-control(type="text", name='author')
+            #form-group
+                label Body:
+                textarea.form-control(name='body')
+            input.btn.btn-primary(type="submit", value='Submit')

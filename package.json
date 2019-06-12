@@ -1,0 +1,36 @@
+{
+  "name": "tmregister",
+  "version": "1.0.0",
+  "description": "��#\u0000 \u0000R\u0000e\u0000g\u0000i\u0000s\u0000t\u0000e\u0000r\u0000A\u0000p\u0000p\u0000\r\u0000 \u0000",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/KhachikHarutyunyan/RegisterApp.git"
+  },
+  "author": "Khachik",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/KhachikHarutyunyan/RegisterApp/issues"
+  },
+  "homepage": "https://github.com/KhachikHarutyunyan/RegisterApp#readme",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.19.0",
+    "connect-flash": "^0.1.1",
+    "express": "^4.17.1",
+    "express-messages": "^1.0.1",
+    "express-session": "^1.16.2",
+    "express-validator": "^5.3.1",
+    "mongoose": "^5.5.14",
+    "passport": "^0.4.0",
+    "passport-local": "^1.0.0",
+    "pug": "^2.0.3"
+  },
+  "devDependencies": {
+    "nodemon": "^1.19.1"
+  }
+}
